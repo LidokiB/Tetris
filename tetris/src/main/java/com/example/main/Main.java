@@ -1,4 +1,4 @@
-package com.example;
+package com.example.main;
 
 import javax.swing.JFrame;
 
@@ -15,5 +15,7 @@ public class Main {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+
+        gp.launchGame();
     }
 }

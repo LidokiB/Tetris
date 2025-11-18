@@ -3,9 +3,12 @@ package com.example.mino;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import com.example.main.PlayManager;
+
 public class Mino {
     public Block b[] = new Block[4];
     public Block temp[] = new Block[4];
+    public int autoDropCounter = 0;
 
     public void create(Color c) {
         b[0] = new Block(c);
@@ -22,6 +25,16 @@ public class Mino {
     }
 
     public void update() {
+
+        autoDropCounter++; // the counter increases every frame
+        if (autoDropCounter == PlayManager.dropInterval) {
+            // the mino goes down
+            b[0].y += Block.SIZE;
+            b[1].y += Block.SIZE;
+            b[2].y += Block.SIZE;
+            b[3].y += Block.SIZE;
+            autoDropCounter = 0;
+        }
     }
 
     public void draw(Graphics2D g2) {

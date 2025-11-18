@@ -1,4 +1,4 @@
-package com.example;
+package com.example.main;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -26,6 +26,9 @@ public class PlayManager {
     Mino currentMino;
     final int MINO_START_X;
     final int MINO_START_Y;
+
+    // Others
+    public static int dropInterval = 60; // mino drops in every 60 frames
 
     public PlayManager() {
         left_x = (GamePanel.WIDTH / 2) - (WIDTH / 2); // 1280/2 - 360/2 = 460
