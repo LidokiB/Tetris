@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.example.mino.Block;
@@ -36,6 +37,10 @@ public class PlayManager {
     Mino currentMino;
     final int MINO_START_X;
     final int MINO_START_Y;
+    Mino nextMino;
+    final int NEXT_MINO_START_X;
+    final int NEXT_MINO_START_Y;
+    public static ArrayList<Block> staticBlocks = new ArrayList<>();
 
     // Others
     public static int dropInterval = 60; // mino drops in every 60 frames
@@ -49,9 +54,15 @@ public class PlayManager {
         MINO_START_X = left_x + (WIDTH / 2) - Block.SIZE;
         MINO_START_Y = bottom_y + Block.SIZE;
 
+        NEXT_MINO_START_X = right_x + 175;
+        NEXT_MINO_START_Y = bottom_y + 500;
+
         // Set the starting Mino
         currentMino = pickMino();
         currentMino.setXY(MINO_START_X, MINO_START_Y);
+
+        nextMino = pickMino();
+        nextMino.setXY(NEXT_MINO_START_X, NEXT_MINO_START_Y);
     }
 
     private Mino pickMino() {
@@ -88,7 +99,24 @@ public class PlayManager {
     }
 
     public void update() {
-        currentMino.update();
+        // Check if the current Mino is inactive
+        if (currentMino.active == false) {
+            // we add the inactve Mino into the array list
+            staticBlocks.add(currentMino.b[0]);
+            staticBlocks.add(currentMino.b[1]);
+            staticBlocks.add(currentMino.b[2]);
+            staticBlocks.add(currentMino.b[3]);
+
+            // The next Mino becomes the current Mino and we position it atop the screen
+            currentMino = nextMino;
+            currentMino.setXY(MINO_START_X, MINO_START_Y);
+
+            // We pick a new nextMino
+            nextMino = pickMino();
+            nextMino.setXY(NEXT_MINO_START_X, NEXT_MINO_START_Y);
+        } else {
+            currentMino.update();
+        }
     }
 
     public void draw(Graphics2D g2) {
@@ -107,8 +135,16 @@ public class PlayManager {
         g2.drawString("NEXT", x + 60, y + 60);
 
         // Draw the currentMino
-        if (currentMino != null) {
+        if (currentMino != null)
             currentMino.draw(g2);
+
+        // Draw the nextMino
+        if (nextMino != null)
+            nextMino.draw(g2);
+
+        // Draw the ArrayList of Minos that are inactive
+        if (staticBlocks != null) {
+            staticBlocks.forEach((block) -> block.draw(g2));
         }
 
         // draw Pause
