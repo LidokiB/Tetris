@@ -12,6 +12,7 @@ import com.example.mino.Mino_L1;
 import com.example.mino.Mino_L2;
 import com.example.mino.Mino_Square;
 import com.example.mino.Mino_T;
+import com.example.mino.Mino_Z1;
 
 import java.awt.Font;
 
@@ -44,7 +45,7 @@ public class PlayManager {
         MINO_START_Y = bottom_y + Block.SIZE;
 
         // Set the starting Mino
-        currentMino = new Mino_T();
+        currentMino = new Mino_Z1();
         currentMino.setXY(MINO_START_X, MINO_START_Y);
     }
 
