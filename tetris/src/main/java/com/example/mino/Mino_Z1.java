@@ -14,17 +14,17 @@ public class Mino_Z1 extends Mino {
         // x o o
 
         //
-        // b1 b0 xx
-        // xx b2 b3
+        // b3 b2 xx
+        // xx b0 b1
 
         b[0].x = x;
         b[0].y = y;
-        b[1].x = b[0].x - Block.SIZE;
+        b[1].x = b[0].x + Block.SIZE;
         b[1].y = b[0].y;
         b[2].x = b[0].x;
-        b[2].y = b[0].y + Block.SIZE;
-        b[3].x = b[0].x + Block.SIZE;
-        b[3].y = b[0].y + Block.SIZE;
+        b[2].y = b[0].y - Block.SIZE;
+        b[3].x = b[0].x - Block.SIZE;
+        b[3].y = b[0].y - Block.SIZE;
     }
 
     public void getDirection1() {
@@ -34,17 +34,17 @@ public class Mino_Z1 extends Mino {
         // x o o
 
         //
-        // b1 b0 xx
-        // xx b2 b3
+        // b3 b2 xx
+        // xx b0 b1
 
         temp[0].x = b[0].x;
         temp[0].y = b[0].y;
-        temp[1].x = b[0].x - Block.SIZE;
+        temp[1].x = b[0].x + Block.SIZE;
         temp[1].y = b[0].y;
         temp[2].x = b[0].x;
-        temp[2].y = b[0].y + Block.SIZE;
-        temp[3].x = b[0].x + Block.SIZE;
-        temp[3].y = b[0].y + Block.SIZE;
+        temp[2].y = b[0].y - Block.SIZE;
+        temp[3].x = b[0].x - Block.SIZE;
+        temp[3].y = b[0].y - Block.SIZE;
 
         updateXY(1);
     }
@@ -54,18 +54,18 @@ public class Mino_Z1 extends Mino {
         // o o
         // o
 
-        // xx b1
-        // b2 b0
-        // b3
+        // xx b3
+        // b0 b2
+        // b1
 
         temp[0].x = b[0].x;
         temp[0].y = b[0].y;
         temp[1].x = b[0].x;
-        temp[1].y = b[0].y - Block.SIZE;
-        temp[2].x = b[0].x - Block.SIZE;
+        temp[1].y = b[0].y + Block.SIZE;
+        temp[2].x = b[0].x + Block.SIZE;
         temp[2].y = b[0].y;
-        temp[3].x = b[0].x - Block.SIZE;
-        temp[3].y = b[0].y + Block.SIZE;
+        temp[3].x = b[0].x + Block.SIZE;
+        temp[3].y = b[0].y - Block.SIZE;
 
         updateXY(2);
     }

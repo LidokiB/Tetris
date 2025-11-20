@@ -63,6 +63,8 @@ public class Mino {
         rightCollision = false;
         bottomCollision = false;
 
+        checkStaticBlockCollision();
+
         // check Frame collision
         // Left wall
         for (int i = 0; i < b.length; i++) {
@@ -88,6 +90,8 @@ public class Mino {
         rightCollision = false;
         bottomCollision = false;
 
+        checkStaticBlockCollision();
+
         // check Frame collision
         // Left wall
         for (int i = 0; i < temp.length; i++) {
@@ -107,6 +111,42 @@ public class Mino {
                 bottomCollision = true;
         }
 
+    }
+
+    // Check collisions with the Static Blocks
+    private void checkStaticBlockCollision() {
+        PlayManager.staticBlocks.forEach((block) -> {
+
+            for (int i = 0; i < b.length; i++) {
+
+                // check down
+                if (b[i].y == block.y && b[i].x == block.x) {
+                    leftCollision = true;
+                    rightCollision = true;
+                    bottomCollision = true;
+                }
+            }
+
+            for (int i = 0; i < b.length; i++) {
+
+                // check down
+                if (b[i].y + Block.SIZE == block.y && b[i].x == block.x)
+                    bottomCollision = true;
+            }
+
+            for (int i = 0; i < b.length; i++) {
+                // check left
+                if (b[i].y == block.y && b[i].x - Block.SIZE == block.x)
+                    leftCollision = true;
+            }
+
+            for (int i = 0; i < b.length; i++) {
+                // check right
+                if (b[i].y == block.y && b[i].x + Block.SIZE == block.x)
+                    rightCollision = true;
+            }
+
+        });
     }
 
     public void update() {
@@ -151,7 +191,7 @@ public class Mino {
             KeyHandler.downPressed = false;
         }
         if (KeyHandler.leftPressed) {
-            // if the Mino is not touching the left wall, it can go down
+            // if the Mino is not touching the left wall, it can go left
             if (!leftCollision) {
                 b[0].x -= Block.SIZE;
                 b[1].x -= Block.SIZE;
@@ -162,7 +202,7 @@ public class Mino {
             KeyHandler.leftPressed = false;
         }
         if (KeyHandler.rightPressed) {
-            // if the Mino is not touching the right wall, it can go down
+            // if the Mino is not touching the right wall, it can go right
             if (!rightCollision) {
                 b[0].x += Block.SIZE;
                 b[1].x += Block.SIZE;
