@@ -7,6 +7,7 @@ import java.awt.RenderingHints;
 
 import com.example.mino.Block;
 import com.example.mino.Mino;
+import com.example.mino.Mino_Bar;
 import com.example.mino.Mino_L1;
 import com.example.mino.Mino_L2;
 import com.example.mino.Mino_Square;
@@ -42,7 +43,7 @@ public class PlayManager {
         MINO_START_Y = bottom_y + Block.SIZE;
 
         // Set the starting Mino
-        currentMino = new Mino_Square();
+        currentMino = new Mino_Bar();
         currentMino.setXY(MINO_START_X, MINO_START_Y);
     }
 
