@@ -62,7 +62,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void update() {
-        pm.update();
+        if (!KeyHandler.pausePressed)
+            pm.update();
     }
 
     public void paintComponent(Graphics g) {
@@ -71,6 +72,5 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
         pm.draw(g2);
-
     }
 }

@@ -110,6 +110,15 @@ public class PlayManager {
         if (currentMino != null) {
             currentMino.draw(g2);
         }
+
+        // draw Pause
+        g2.setColor(Color.yellow);
+        g2.setFont(g2.getFont().deriveFont(50f));
+        if (KeyHandler.pausePressed) {
+            x = left_x + 80;
+            y = bottom_y + 320;
+            g2.drawString("PAUSED", x, y);
+        }
     }
 
 }
