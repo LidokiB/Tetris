@@ -26,6 +26,9 @@ public class PlayManager {
     final int HEIGHT = 600;
     public static int left_x;
     public static int right_x;
+    // the top and bottom is reversed the screen start to the most up left position
+    // and goes down and right
+    // a greater value in the y axis means lower on the screen
     public static int top_y;
     public static int bottom_y;
 

@@ -11,6 +11,7 @@ public class Mino {
     public Block temp[] = new Block[4];
     public int autoDropCounter = 0;
     public int direction = 1; // There are four directions (1/2/3/4)
+    public boolean leftCollision, rightCollision, bottomCollision;
 
     public void create(Color c) {
         b[0] = new Block(c);
@@ -52,21 +53,37 @@ public class Mino {
     public void getDirection4() {
     }
 
+    public void checkMovementCollision() {
+        leftCollision = false;
+        rightCollision = false;
+        bottomCollision = false;
+
+        // check Frame collision
+        // Left wall
+        for (int i = 0; i < b.length; i++) {
+            if (b[i].x == PlayManager.left_x)
+                leftCollision = true;
+        }
+
+        // Right wall
+        for (int i = 0; i < b.length; i++) {
+            if (b[i].x + Block.SIZE == PlayManager.right_x)
+                rightCollision = true;
+        }
+
+        // Bottom wall
+        for (int i = 0; i < b.length; i++) {
+            if (b[i].y + Block.SIZE == PlayManager.top_y)
+                bottomCollision = true;
+        }
+    }
+
+    public void checkRotationCollision() {
+    }
+
     public void update() {
 
         // Move the mino
-        if (KeyHandler.downPressed) {
-
-            b[0].y += Block.SIZE;
-            b[1].y += Block.SIZE;
-            b[2].y += Block.SIZE;
-            b[3].y += Block.SIZE;
-
-            // When moved down, reset the autoDropCounter
-            autoDropCounter = 0;
-
-            KeyHandler.downPressed = false;
-        }
         if (KeyHandler.upPressed) {
 
             // controls the rotation
@@ -88,21 +105,42 @@ public class Mino {
 
             KeyHandler.upPressed = false;
         }
-        if (KeyHandler.leftPressed) {
 
-            b[0].x -= Block.SIZE;
-            b[1].x -= Block.SIZE;
-            b[2].x -= Block.SIZE;
-            b[3].x -= Block.SIZE;
+        checkMovementCollision();
+
+        if (KeyHandler.downPressed) {
+            // if the Mino is not touching the bottom, it can go down
+            if (!bottomCollision) {
+                b[0].y += Block.SIZE;
+                b[1].y += Block.SIZE;
+                b[2].y += Block.SIZE;
+                b[3].y += Block.SIZE;
+
+                // When moved down, reset the autoDropCounter
+                autoDropCounter = 0;
+            }
+
+            KeyHandler.downPressed = false;
+        }
+        if (KeyHandler.leftPressed) {
+            // if the Mino is not touching the left wall, it can go down
+            if (!leftCollision) {
+                b[0].x -= Block.SIZE;
+                b[1].x -= Block.SIZE;
+                b[2].x -= Block.SIZE;
+                b[3].x -= Block.SIZE;
+            }
 
             KeyHandler.leftPressed = false;
         }
         if (KeyHandler.rightPressed) {
-
-            b[0].x += Block.SIZE;
-            b[1].x += Block.SIZE;
-            b[2].x += Block.SIZE;
-            b[3].x += Block.SIZE;
+            // if the Mino is not touching the right wall, it can go down
+            if (!rightCollision) {
+                b[0].x += Block.SIZE;
+                b[1].x += Block.SIZE;
+                b[2].x += Block.SIZE;
+                b[3].x += Block.SIZE;
+            }
 
             KeyHandler.rightPressed = false;
         }
