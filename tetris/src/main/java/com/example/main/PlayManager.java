@@ -44,6 +44,17 @@ public class PlayManager {
 
     // Others
     public static int dropInterval = 60; // mino drops in every 60 frames
+    public boolean gameOver;
+
+    // Effects
+    boolean effectCounterOn;
+    int effectCounter;
+    ArrayList<Integer> effectY = new ArrayList<>();
+
+    // Score
+    public int score = 0;
+    public int level = 1;
+    public int lines = 0;
 
     public PlayManager() {
         left_x = (GamePanel.WIDTH / 2) - (WIDTH / 2); // 1280/2 - 360/2 = 460
@@ -109,6 +120,13 @@ public class PlayManager {
 
             currentMino.deactivating = false;
 
+            // we check if the game is over
+            if (currentMino.b[0].y == MINO_START_Y && currentMino.b[0].x == MINO_START_X) {
+                // this means that the mino could not move from the starting position
+                // the game is over
+                gameOver = true;
+            }
+
             // The next Mino becomes the current Mino and we position it atop the screen
             currentMino = nextMino;
             currentMino.setXY(MINO_START_X, MINO_START_Y);
@@ -125,8 +143,10 @@ public class PlayManager {
     }
 
     private void checkDelete() {
+
+        int linesClearedThisCall = 0;
+
         // Check if any row is completely filled with blocks
-        // If so, delete the row and move all blocks above it down
         for (int y = bottom_y + HEIGHT - Block.SIZE; y >= bottom_y; y -= Block.SIZE) {
             int count = 0;
             for (Block block : staticBlocks) {
@@ -135,9 +155,17 @@ public class PlayManager {
                 }
             }
             if (count >= WIDTH / Block.SIZE) {
+
+                effectCounterOn = true;
+                effectY.add(y);
+
                 // Delete the row
                 int finalY = y;
                 staticBlocks.removeIf(block -> block.y == finalY);
+
+                // Track cleared rows
+                linesClearedThisCall++;
+                lines++;
 
                 // Move all blocks above down
                 for (Block block : staticBlocks) {
@@ -148,6 +176,29 @@ public class PlayManager {
 
                 // After deleting a row, check the same row again
                 y += Block.SIZE;
+            }
+        }
+
+        if (linesClearedThisCall > 0) {
+            // Update score for the cleared rows (simple scheme)
+            score += 100 * level * linesClearedThisCall;
+
+            // Level progression: increase level every 3 total lines cleared
+            int oldLevel = level;
+            int newLevel = 1 + (lines / 3);
+            if (newLevel > oldLevel) {
+                int delta = newLevel - oldLevel;
+                for (int i = 0; i < delta; i++) {
+                    level++;
+                    // adjust dropInterval per level up (preserve original behavior)
+                    if (dropInterval > 10) {
+                        dropInterval -= 10;
+                    } else if (dropInterval > 1) {
+                        dropInterval -= 1;
+                    } else {
+                        dropInterval = 1;
+                    }
+                }
             }
         }
     }
@@ -167,6 +218,17 @@ public class PlayManager {
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.drawString("NEXT", x + 60, y + 60);
 
+        // Draw Score Frame
+        g2.drawRect(x, bottom_y, 250, 300);
+        x += 40;
+        y = bottom_y + 90;
+        g2.drawString("LEVEL " + level, x, y);
+        y += 70;
+        g2.drawString("SCORE " + score, x, y);
+        y += 70;
+        g2.drawString("LINES " + lines, x, y);
+        y += 70;
+
         // Draw the currentMino
         if (currentMino != null)
             currentMino.draw(g2);
@@ -180,6 +242,30 @@ public class PlayManager {
             staticBlocks.forEach((block) -> block.draw(g2));
         }
 
+        // Draw row deletion effect
+        if (effectCounterOn) {
+            effectCounter++;
+
+            g2.setColor(Color.white);
+            for (int i = 0; i < effectY.size(); i++) {
+                g2.fillRect(left_x, effectY.get(i), WIDTH, Block.SIZE);
+            }
+            if (effectCounter == 10) {
+                effectCounter = 0;
+                effectCounterOn = false;
+                effectY.clear();
+            }
+        }
+
+        // draw Title
+        x = left_x - 300;
+        g2.setColor(Color.white);
+        g2.setFont(new Font("Impact", Font.BOLD, 50));
+        g2.drawString("TETRIS", x, y);
+        g2.setFont(new Font("Arial", Font.PLAIN, 16));
+        g2.drawString("Developed following a tutorial by TyiSnow", x - 100, y + 40);
+        g2.drawString("https://www.youtube.com/watch?v=N1ktYfszqnM&t=220s", x - 100, y + 60);
+
         // draw Pause
         g2.setColor(Color.yellow);
         g2.setFont(g2.getFont().deriveFont(50f));
@@ -188,6 +274,14 @@ public class PlayManager {
             y = bottom_y + 320;
             g2.drawString("PAUSED", x, y);
         }
-    }
 
+        // draw Game Over
+        g2.setColor(Color.red);
+        g2.setFont(g2.getFont().deriveFont(50f));
+        if (gameOver) {
+            x = left_x + 25;
+            y = bottom_y + 320;
+            g2.drawString("GAME OVER", x, y);
+        }
+    }
 }
