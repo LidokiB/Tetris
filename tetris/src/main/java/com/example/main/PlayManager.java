@@ -107,6 +107,8 @@ public class PlayManager {
             staticBlocks.add(currentMino.b[2]);
             staticBlocks.add(currentMino.b[3]);
 
+            currentMino.deactivating = false;
+
             // The next Mino becomes the current Mino and we position it atop the screen
             currentMino = nextMino;
             currentMino.setXY(MINO_START_X, MINO_START_Y);
@@ -114,8 +116,39 @@ public class PlayManager {
             // We pick a new nextMino
             nextMino = pickMino();
             nextMino.setXY(NEXT_MINO_START_X, NEXT_MINO_START_Y);
+
+            // When a Mino deactivates, we check for any filled rows to delete
+            checkDelete();
         } else {
             currentMino.update();
+        }
+    }
+
+    private void checkDelete() {
+        // Check if any row is completely filled with blocks
+        // If so, delete the row and move all blocks above it down
+        for (int y = bottom_y + HEIGHT - Block.SIZE; y >= bottom_y; y -= Block.SIZE) {
+            int count = 0;
+            for (Block block : staticBlocks) {
+                if (block.y == y) {
+                    count++;
+                }
+            }
+            if (count >= WIDTH / Block.SIZE) {
+                // Delete the row
+                int finalY = y;
+                staticBlocks.removeIf(block -> block.y == finalY);
+
+                // Move all blocks above down
+                for (Block block : staticBlocks) {
+                    if (block.y < y) {
+                        block.y += Block.SIZE;
+                    }
+                }
+
+                // After deleting a row, check the same row again
+                y += Block.SIZE;
+            }
         }
     }
 
